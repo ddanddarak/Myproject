@@ -1,0 +1,5 @@
+@charset "utf-8"
+div{background-color: black;}
+.tsetDiv { border: 1px solid black; }
+.tsetDiv:first-child { border: 1px solid red; }
+.tsetDiv:last-child { border: 1px solid blue; }
