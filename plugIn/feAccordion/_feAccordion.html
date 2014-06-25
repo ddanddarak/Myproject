@@ -1,0 +1,403 @@
+<!doctype html>
+<!--
+	feAccordion
+	Version: 1.1
+-->
+<html lang="ko">
+<head>
+	<meta charset="utf-8">
+	<title>feAccordion</title>
+	<style>
+		/* feAccordion common */
+		.feAcHorizon, .feAcVertical {overflow: hidden;}
+		.feAcMenu, .feAcContainer {
+			overflow: hidden;
+			margin: 0;
+			padding: 0;
+		}
+		.feAcContent {overflow: hidden;}
+		.feAcMenu:hover {cursor: pointer;}
+		.feAcHorizon .feAcMenu,
+		.feAcHorizon .feAcContainer {
+			float: left;
+			width: 100%;
+			height: 100%;
+		}
+		.feAcVertical .feAcMenu,
+		.feAcVertical .feAcContainer {width: 100%;}
+		/* feAccordion default style */
+		.feAcHorizon {
+			width: 500px;
+			height: 300px;
+		}
+		.feAcHorizon .feAcMenu {width: 50px;}
+		.feAcVertical {
+			width: 300px;
+			height: 500px;
+		}
+	</style>
+	<style>
+		/* feAccordion user style */
+		/* myClass1 */
+		.myClass1 p {margin: 10px;}
+		.myClass1 .feAcMenu {background-color: #ccc;}
+		.myClass1 .current.feAcMenu {background-color: #aaa;}
+		.myClass1 .current.feAcContainer {background-color: #eee;}
+		/* myClass2 */
+		.myClass2 p {margin: 30px;}
+		.myClass2 .feAcMenu {background-color: #aaa;}
+		.myClass2 .current.feAcMenu {background-color: #eee;}
+		.myClass2 .current.feAcContainer {background-color: #ccc;}
+		/* myClass3 */
+		.myClass3 {width: 100%;}
+		.myClass3 p {margin: 10px;}
+		.myClass3 .feAcMenu {background-color: #aaa;}
+		.myClass3 .current.feAcMenu {background-color: #eee;}
+		.myClass3 .current.feAcContainer {background-color: #ccc;}
+		/* myClass4 */
+		.myClass4 {width: 100%;}
+		.myClass4 p {margin: 20px;}
+		.myClass4 .feAcMenu {background-color: #aaa;}
+		.myClass4 .current.feAcMenu {background-color: #eee;}
+		.myClass4 .current.feAcContainer {background-color: #ccc;}
+		/* myClass5 */
+		.myClass5 {
+			width: 800px;
+			height: 500px;
+		}
+		.myClass5 .feAcMenu {
+			width: 100px;
+			font-size: 1em;
+			background-color: #aaa;
+		}
+		.myClass5 .on.feAcMenu {background-color: #eee;}
+		.myClass5 .on.feAcContainer {background-color: #ccc;}
+	</style>
+	<script src="http://code.jquery.com/jquery.min.js"></script>
+	<script src="http://code.codeisart.co.kr/jquery.easing.min.js"></script>
+	<script>
+		;(function($, window, document, undefined) {
+			/* feAccordion */
+			$.fn.feAccordion = function(options) {
+				// feAccordion default options
+				var _defaults = {
+					menuElem: 'h2', // Menu element(Element)
+					currentClass: 'current', // Current class(String)
+					aniDirection: 'horizontal', // Direction(horizontal|vertical)
+					fixedLayout: true, // Fixed layout(true|false)
+					aniSpeed: 500, // Animate speed(Number)
+					aniEasing: 'swing', // jQuery easing effect
+					startPannel: 1 // Start pannel index
+				},
+				// Marge default options with new settings
+				_options = $.extend({}, _defaults, options);
+				return this.each(function() {
+					var $this = $(this),
+						// Set menu, container, content elements
+						$feAcMenu = $this.find('> ' + _options.menuElem)
+							.addClass('feAcMenu').attr('tabindex', '0'),
+						$feAcContainer = $feAcMenu.next('div')
+							.addClass('feAcContainer'),
+						menuSize = $feAcMenu.size(), // Menu length
+						loadCount = 0, // Event counter
+						aniSpeed, // Reset for first load
+						// Direction setting
+						$feAcContent = $feAcContainer
+							.wrapInner('<div class="feAcContent" />')
+							.find('.feAcContent'),
+						wrapperSize, directionUnit, contentSize,
+						feAcMethod = {
+							// Common
+							init: function() {
+								// Reset direction val
+								if ( _options.aniDirection !== 'vertical' ) {
+									directionUnit = 'width';
+									$this.addClass('feAcHorizon');
+								} else {
+									directionUnit = 'height';
+									$this.addClass('feAcVertical');
+								};
+							},
+							// Horizontal
+							horizontal: function($tgContainer, aniSpeed) {
+								// Check layout option
+								calcSize();
+								$feAcContent.css(directionUnit, contentSize);
+								// Common
+								$feAcContainer.not($tgContainer).stop().animate({
+									width: 0
+								}, aniSpeed, _options.aniEasing).end()
+								// Current
+								.filter($tgContainer).stop().animate({
+									width: contentSize
+								}, aniSpeed, _options.aniEasing);
+							},
+							// Vertical
+							vertical: function($tgContainer, aniSpeed) {
+								// Check layout option
+								calcSize();
+								if ( !_options.fixedLayout ) {
+									contentSize = $tgContainer.find($feAcContent)
+										.css(directionUnit);
+									// Remove fixed css style
+									$this.css(directionUnit, 'auto');
+								};
+								// Common
+								$feAcContainer.not($tgContainer).stop().animate({
+									height: 0
+								}, aniSpeed, _options.aniEasing).end()
+								// Current
+								.filter($tgContainer).stop().animate({
+									height: contentSize
+								}, aniSpeed, _options.aniEasing);
+							}
+						};
+					// Call common setting
+					feAcMethod.init();
+					// Common event
+					$feAcMenu.on('click focus', function(e) {
+						var $tgContainer = $(this).next($feAcContainer),
+							// Start pannel set
+							aniSpeed = ( loadCount == 0 ) ? 0 : _options.aniSpeed;
+						e.preventDefault();
+						if ( $(this).hasClass(_options.currentClass) ) return false;
+						// Toggle current class
+						$(this).addClass(_options.currentClass)
+							.next($feAcContainer)
+								.addClass(_options.currentClass)
+							.siblings().not($(this))
+								.removeClass(_options.currentClass);
+						// Call direction event
+						( _options.aniDirection !== 'vertical' )
+							? feAcMethod.horizontal($tgContainer, aniSpeed)
+							: feAcMethod.vertical($tgContainer, aniSpeed);
+						++loadCount; // Change counter
+					}).css('outline', 'none') // Remove outline
+					// Start Pannel
+					.eq(_options.startPannel - 1).trigger('click');
+					// Extra event
+					// Keyboard event(Focus in contents)
+					$feAcContainer.find('*').on('focus', function() {
+						var $tgContainer = $(this).closest($feAcContainer),
+							$tgMenu = $tgContainer.prev($feAcMenu);
+						$tgMenu.trigger('click');
+					}).parents().on('keydown', function(e) { // Reset outline
+						if ( e.keyCode == 9 ) $feAcMenu.css('outline', '');
+					});
+					// Window resize event for horizontal layout
+					$(window).on('resize', function() {
+						if ( _options.aniDirection !== 'vertical' 
+							&& !_options.fixedLayout ) {
+							calcSize();
+							// Resize container, content area
+							$feAcContainer.filter('.' + _options.currentClass)
+								.css(directionUnit, contentSize);
+							$feAcContent.css(directionUnit, contentSize);
+						};
+					});
+					// Calulate layout size
+					function calcSize() {
+						wrapperSize = parseInt($this.css(directionUnit));
+						contentSize = wrapperSize 
+							- parseInt($feAcMenu.css(directionUnit))
+							* menuSize;
+					};
+				});
+			};
+			/* //feAccordion */
+		})(jQuery, window, document);
+	</script>
+	<script>
+		/* User script */
+		$(function() {
+			$(".myClass1").feAccordion({
+				aniSpeed: 800,
+				aniEasing: 'easeInQuint'
+			});
+			$(".myClass2").feAccordion({
+				aniDirection: 'vertical',
+				startPannel: 3
+			});
+			$(".myClass3").feAccordion({
+				fixedLayout: false
+			});
+			$(".myClass4").feAccordion({
+				fixedLayout: false,
+				aniDirection: 'vertical',
+				aniSpeed: 400,
+				aniEasing: 'easeInQuint'
+			});
+			$(".myClass5").feAccordion({
+				menuElem: 'h3',
+				currentClass: 'on',
+				fixedLayout: false,
+				aniSpeed: 500,
+				startPannel: 2
+			});
+		});
+	</script>
+</head>
+<body>
+	<h1>feAccordion: default(.myClass1)</h1>
+	<!-- feAccordion(myClass1) -->
+	<div class="myClass1">
+		<!-- item -->
+		<h2>Menu1 Title</h2>
+		<div>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias, eos, aspernatur quia fugiat nulla ex minima facere deleniti expedita quibusdam rem dolorum sit dolorem aut beatae officiis architecto saepe molestias.</p>
+		</div>
+		<!-- //item -->
+		<h2>Menu2 Title</h2>
+		<div>
+			<!-- Blank test -->
+		</div>
+		<h2>Menu3 Title</h2>
+		<div>
+			Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+			<ul>
+				<li><a href="/">Menu3-1</a></li>
+				<li><a href="/">Menu3-2</a></li>
+				<li><a href="/">Menu3-3</a></li>
+			</ul>
+		</div>
+		<h2>Menu4 Title</h2>
+		<div>
+			<img src="http://dummyimage.com/200x200/000000/fff&amp;text=image" alt="">
+		</div>
+	</div>
+	<!-- //feAccordion(myClass1) -->
+	<hr>
+	<h1>feAccordion: vertical(.myClass2)</h1>
+	<!-- feAccordion(myClass2) -->
+	<div class="myClass2">
+		<!-- item -->
+		<h2>Menu1 Title</h2>
+		<div>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias, eos, aspernatur quia fugiat nulla ex minima facere deleniti expedita quibusdam rem dolorum sit dolorem aut beatae officiis architecto saepe molestias.</p>
+		</div>
+		<!-- //item -->
+		<h2>Menu2 Title</h2>
+		<div>
+			<!-- Blank test -->
+		</div>
+		<h2>Menu3 Title</h2>
+		<div>
+			Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+			<ul>
+				<li><a href="/">Menu3-1</a></li>
+				<li><a href="/">Menu3-2</a></li>
+				<li><a href="/">Menu3-3</a></li>
+			</ul>
+		</div>
+		<h2>Menu4 Title</h2>
+		<div>
+			<img src="http://dummyimage.com/200x200/000000/fff&amp;text=image" alt="">
+		</div>
+	</div>
+	<!-- //feAccordion(myClass2) -->
+	<hr>
+	<h1>feAccordion: default(.myClass3)</h1>
+	<!-- feAccordion(myClass3) -->
+	<div class="myClass3">
+		<!-- item -->
+		<h2>Menu1 Title</h2>
+		<div>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias, eos, aspernatur quia fugiat nulla ex minima facere deleniti expedita quibusdam rem dolorum sit dolorem aut beatae officiis architecto saepe molestias.</p>
+		</div>
+		<!-- //item -->
+		<h2>Menu2 Title</h2>
+		<div>
+			<!-- Blank test -->
+		</div>
+		<h2>Menu3 Title</h2>
+		<div>
+			Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+			<ul>
+				<li><a href="/">Menu3-1</a></li>
+				<li><a href="/">Menu3-2</a></li>
+				<li><a href="/">Menu3-3</a></li>
+			</ul>
+		</div>
+		<h2>Menu4 Title</h2>
+		<div>
+			<img src="http://dummyimage.com/200x200/000000/fff&amp;text=image" alt="">
+		</div>
+	</div>
+	<!-- //feAccordion(myClass3) -->
+	<hr>
+	<h1>feAccordion: vertical(.myClass4)</h1>
+	<!-- feAccordion(myClass4) -->
+	<div class="myClass4">
+		<!-- item -->
+		<h2>Menu1 Title</h2>
+		<div>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias, eos, aspernatur quia fugiat nulla ex minima facere deleniti expedita quibusdam rem dolorum sit dolorem aut beatae officiis architecto saepe molestias.</p>
+		</div>
+		<!-- //item -->
+		<h2>Menu2 Title</h2>
+		<div>
+			Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+			<ul>
+				<li><a href="/">Menu3-1</a></li>
+				<li><a href="/">Menu3-2</a></li>
+				<li><a href="/">Menu3-3</a></li>
+			</ul>
+		</div>
+		<h2>Menu3 Title</h2>
+		<div>
+			<img src="http://dummyimage.com/200x200/000000/fff&amp;text=image" alt="">
+		</div>
+		<h2>Menu4 Title</h2>
+		<div>
+			<img src="http://dummyimage.com/200x200/000000/fff&amp;text=image" alt="">
+		</div>
+		<h2>Menu5 Title</h2>
+		<div>
+			<ul>
+				<li><a href="/">Menu5-1</a></li>
+				<li><a href="/">Menu5-2</a></li>
+				<li><a href="/">Menu5-3</a></li>
+			</ul>
+		</div>
+		<h2>Menu6 Title</h2>
+		<div>
+			<img src="http://dummyimage.com/200x200/000000/fff&amp;text=image" alt="">
+		</div>
+	</div>
+	<!-- //feAccordion(myClass4) -->
+	<hr>
+	<h1>feAccordion: default(.myClass5)</h1>
+	<h2>Title</h2>
+	<!-- feAccordion(myClass5) -->
+	<div class="myClass5">
+		<!-- item -->
+		<h3>Menu1 Title</h3>
+		<div>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias, eos, aspernatur quia fugiat nulla ex minima facere deleniti expedita quibusdam rem dolorum sit dolorem aut beatae officiis architecto saepe molestias.</p>
+		</div>
+		<!-- //item -->
+		<h3>Menu2 Title</h3>
+		<div>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam, placeat eveniet vitae quisquam non dignissimos itaque dolores praesentium molestias possimus ipsa eligendi accusamus voluptatibus. Porro eum id quae dolore cum!</p>
+		</div>
+		<h3>Menu3 Title</h3>
+		<div>
+			Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+			<ul>
+				<li><a href="/">Menu3-1</a></li>
+				<li><a href="/">Menu3-2</a></li>
+				<li><a href="/">Menu3-3</a></li>
+			</ul>
+		</div>
+		<h3>Menu4 Title</h3>
+		<div>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam, placeat eveniet vitae quisquam non dignissimos itaque dolores praesentium molestias possimus ipsa eligendi accusamus voluptatibus. Porro eum id quae dolore cum!</p>
+		</div>
+		<h3>Menu5 Title</h3>
+		<div>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam, placeat eveniet vitae quisquam non dignissimos itaque dolores praesentium molestias possimus ipsa eligendi accusamus voluptatibus. Porro eum id quae dolore cum!</p>
+		</div>
+	</div>
+	<!-- //feAccordion(myClass5) -->
+</body>
+</html>

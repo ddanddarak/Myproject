@@ -1,0 +1,70 @@
+<!doctype html>
+<!--
+		Layer popup
+		Bonny.bak Mode 03.05.2014
+ -->
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<title>Layer popup</title>
+		<style>
+			/* Flexible Base */
+			html {
+				font-size: 1em;
+				line-height: 1;
+				font-family: Malgun-Gothic, '맑은 고딕';
+				color: #707274;
+			}
+			h1, h2, h3, h4, h5, h6, p {
+				margin: 0;
+				padding: 0;
+			}
+			a {
+				color: #444;
+				text-decoration: none;
+			}
+			button {cursor: pointer;}
+		</style>
+		<style>
+			/* Layer popup */
+			.popSample {
+				position: absolute;
+				top: 10%;
+				left: 10%;
+				width: 340px;
+				padding: 3px;
+				border: 1px solid #e4e4e4;
+				border-radius: 3px;
+				background-color: #fff;
+				text-align: left;
+			}
+			.popSample h3 {
+				padding: 7px 13px;
+				border-radius: 3px;
+				font-size: 13px;
+				background-color: #777;
+				color: #fff;
+				text-align: left;
+			}
+			.popSample p {padding: 13px;}
+			.popCloseBtn {
+				position: absolute;
+				top: 9px;
+				right: 9px;
+				margin: 0;
+				padding: 0;
+				border: 0;
+				background-color: transparent;
+				color: #fff;
+			}
+		</style>
+	</head>
+	<body>
+		<a href="#myId" class="popOpenBtn">open</a>
+		<div id="myId" class="popSample">
+			<h3>Layer popup</h3>
+			<p>This is the default Layer popup which is useful for displaying information.<br />The Layer popup window can be moved, resized and closed with the 'x' icon.</p>
+			<button type="button" class="popCloseBtn">close</button>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,132 @@
+<!doctype html>
+<!--
+		Paginate
+		Bonny.bak Mode 03.03.2014
+ -->
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<title>Paginate</title>
+		<style>
+			/* Flexible Base */
+			html {
+				line-height: 1;
+				font-family: Malgun-Gothic, '맑은 고딕';
+				color: #707274;
+				text-align: center;
+			}
+			p {padding-bottom: 2.5%;}
+			p:first-letter {font-weight: bold;}
+		</style>
+		<style>
+			/* Paginate Type 1 */
+			.myClass1 {
+				font-size: 13px;
+				line-height: 1;
+				font-family: Malgun-Gothic, '맑은 고딕';
+				text-align: center;
+				padding: 12px 0;
+			}
+			.myClass1 a, .myClass1 em {
+				display: inline-block;
+				color: #707274;
+			}
+			.myClass1 a {text-decoration: none;}
+			.myClass1 em {
+				font-style: normal;
+				cursor: default;
+			}
+			.myClass1 .pageNum {
+				padding: 4px 7px;
+				border: 1px solid #707274;
+				background-color: #fff;
+			}
+			.myClass1 .current {
+				font-weight: bold;
+				border-color: #707274;
+				background-color: #707277;
+				color: #fff;
+			}
+			.myClass1 .first {margin: 6px 7px 4px 0;}
+			.myClass1 .prev {margin: 6px 12px 4px 0;}
+			.myClass1 .next {margin: 6px 0 4px 12px;}
+			.myClass1 .last {margin: 6px 0 4px 7px;}
+		</style>
+		<style>
+			/* Paginate Type 2 */
+			.myClass2 {
+				font-size: 0.8em;
+				line-height: 1;
+				font-family: Malgun-Gothic, '맑은 고딕';
+				text-align: center;
+				padding: 0.9375em 0;
+			}
+			.myClass2 a, .myClass2 strong {
+				display: inline-block;
+				padding: 0.3125em 0.5469em;
+				border: 1px solid #707274;
+				background-color: #fff;
+				color: #707274;
+			}
+			.myClass2 a {text-decoration: none;}
+			.myClass2 strong {cursor: default;}
+			.myClass2 .current {
+				font-weight: bold;
+				border-color: #707274;
+				background-color: #707277;
+				color: #fff;
+			}
+			.myClass2 a:first-child, .myClass2 a:nth-child(2),
+			.myClass2 a:nth-last-child(2), .myClass2 a:last-child {
+				padding: 0;
+				border: 0;
+				background-color: transparent;
+			}
+			.myClass2 a:first-child {margin: 0.46875em 0.5469em 0.3125em 0;}
+			.myClass2 a:nth-child(2) {margin:0.46875em 0.9375em 0.3125em 0;}
+			.myClass2 a:nth-last-child(2) {margin: 0.46875em 0 0.3125em 0.9375em;}
+			.myClass2 a:last-child {margin: 0.46875em 0 0.3125em 0.5469em;}
+		</style>
+	</head>
+	<body>
+		<h1>Basic</h1>
+		<!-- Paginate Type 1 -->
+		<div class="myClass1">
+			<a href="#" class="first">First</a>
+			<a href="#" class="prev">Prev</a>
+			<em class="pageNum current">1</em>
+			<a href="#" class="pageNum">2</a>
+			<a href="#" class="pageNum">3</a>
+			<a href="#" class="pageNum">4</a>
+			<a href="#" class="pageNum">5</a>
+			<a href="#" class="pageNum">6</a>
+			<a href="#" class="pageNum">7</a>
+			<a href="#" class="pageNum">8</a>
+			<a href="#" class="pageNum">9</a>
+			<a href="#" class="next">Next</a>
+			<a href="#" class="last">Last</a>
+		</div>
+		<p>Test Browser: Modern Browser, IE7, IE8, IE9, IE10</p>
+		<!-- //Paginate Type 1 -->
+		<hr />
+		<h1>Class none</h1>
+		<!-- Paginate Type 2 -->
+		<div class="myClass2">
+			<a href="#">First</a>
+			<a href="#">Prev</a>
+			<strong class="current">1</strong>
+			<a href="#">2</a>
+			<a href="#">3</a>
+			<a href="#">4</a>
+			<a href="#">5</a>
+			<a href="#">6</a>
+			<a href="#">7</a>
+			<a href="#">8</a>
+			<a href="#">9</a>
+			<a href="#">Next</a>
+			<a href="#">Last</a>
+		</div>
+		<!-- //Paginate Type 2 -->
+		<p>Test Browser: Modern Browser, IE9, IE10</p>
+	</body>
+</html>

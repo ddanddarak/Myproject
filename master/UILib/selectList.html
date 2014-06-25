@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<title>selectList</title>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script>
+	//selectList
+	$(function(){
+		$(".myClass button").click(function (){
+			$(this).next("ul").slideToggle(300);
+			return false;
+		});
+		$(".myClass").mouseleave(function(){
+			$(".myClass ul").css("display","none");
+		});
+		$(".myClass ul li a").click(function(){
+			$(".myClass ul").css("display","none");
+		});
+	});
+	</script>
+	<style>
+	* {
+		line-height: 1;
+		font-family: Malgun-Gothic, '맑은 고딕';
+		color: #333;
+		padding: 0;
+		margin: 0;
+		font-size: 12px;
+	}
+	.myClass {
+		position: relative; 
+		left: 20px; 
+		top: 200px; 
+		width: 200px; 
+		height: 20px; 
+		z-index: 30;
+	}
+	.myClass button {
+		position: absolute; 
+		width: 200px; 
+		height: 20px; 
+		border: 1px solid #ddd; 
+		background: #fff;  
+		z-index: 20;
+	}
+	.myClass ul {
+		display: none; 
+		position: absolute; 
+		width: 198px; 
+		bottom: 20px; 
+		border-top: 1px solid #ddd; 
+		border-right: 1px solid #ddd; 
+		border-left: 1px solid #ddd; 
+		background: #fff; 
+		z-index: 10;
+	}
+	.myClass ul li {
+		list-style: none; 
+		width: 198px;
+	}
+	.myClass ul li a {
+		display: block; 
+		width: 193px; 
+		height: 16px; 
+		padding: 5px 0 0 7px; 
+		color: #999; 
+		text-decoration: none;
+	}
+	.myClass ul li a:hover, .myClass ul li a:focus {background: #eee;}
+	</style>
+</head>
+<body>
+<!-- selectList -->
+<div class="myClass">
+	<button type="button">selectList</button>
+	<ul>
+		<li><a href="#" target="_blank" title="새창으로 열기">text1</a></li>
+		<li><a href="#" target="_blank" title="새창으로 열기">text2</a></li>
+		<li><a href="#" target="_blank" title="새창으로 열기">text3</a></li>
+		<li><a href="#" target="_blank" title="새창으로 열기">text4</a></li>
+		<li><a href="#" target="_blank" title="새창으로 열기">text5</a></li>
+	</ul>
+</div>
+<!-- //selectList -->
+</body>
+</html>
